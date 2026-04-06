@@ -29,16 +29,16 @@ function init() {
   // ==========================================================
 
   // passo 3: luzes cinemáticas (rim lighting)
-  // setupCinematicLights();
+  setupCinematicLights();
 
   // passo 4: mapeamento de ambiente (hdri)
-  // setupEnvironment();
+  setupEnvironment();
 
   // passo 5: texturas pbr no solo (lembre-se de comentar o setupBasicFloor acima)
-  // setupPBRFloor();
+  setupPBRFloor();
 
   // passo 6: objetos didáticos para mapeamento uv (caixa e barril)
-  // setupPrimitives();
+  setupPrimitives();
 
   window.addEventListener("resize", onWindowResize);
   animate();
@@ -54,7 +54,7 @@ function setupSceneAndCamera() {
 
   // é configurada a câmera de perspectiva
   camera = new THREE.PerspectiveCamera(
-    45,
+    100,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
@@ -83,10 +83,10 @@ function setupControls() {
 
 function setupBasicLighting() {
   // são adicionadas luzes de suporte gerais
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+  const ambientLight = new THREE.AmbientLight(0xff464646, 3);
   scene.add(ambientLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+  const directionalLight = new THREE.DirectionalLight(0xff2255, 3);
   directionalLight.position.set(5, 10, 5);
   directionalLight.castShadow = true;
   scene.add(directionalLight);
@@ -94,13 +94,13 @@ function setupBasicLighting() {
 
 function setupCinematicLights() {
   // são adicionadas luzes de destaque nos cantos para efeito cinemático
-  const bluePointLight = new THREE.PointLight(0x0055ff, 50, 20);
-  bluePointLight.position.set(-4, 1.5, 4);
-  scene.add(bluePointLight);
-
   const redPointLight = new THREE.PointLight(0xff2255, 50, 20);
-  redPointLight.position.set(4, 1.5, -4);
+  redPointLight.position.set(0, 1.5, -6);
   scene.add(redPointLight);
+
+  const orangePointLight = new THREE.PointLight(0xffff22, 90, 20);
+  orangePointLight.position.set(0, 0, 4);
+  scene.add(orangePointLight);
 }
 
 function setupEnvironment() {
@@ -110,7 +110,7 @@ function setupEnvironment() {
     environmentMap.mapping = THREE.EquirectangularReflectionMapping;
     scene.background = environmentMap;
     scene.backgroundBlurriness = 0.1;
-    scene.backgroundIntensity = 0.4;
+    scene.backgroundIntensity = 1;
     scene.environment = environmentMap;
   });
 }
@@ -172,6 +172,7 @@ function setupPrimitives() {
   const crateTexture = textureLoader.load("./assets/texture/crate.jpg");
   crateTexture.colorSpace = THREE.SRGBColorSpace;
   const crateNormal = textureLoader.load("./assets/texture/crate_normal.jpg");
+  crateTexture.magFilter = THREE.NearestFilter;
 
   const barrelTexture = textureLoader.load("./assets/texture/barrel.jpg");
   barrelTexture.colorSpace = THREE.SRGBColorSpace;
@@ -180,9 +181,9 @@ function setupPrimitives() {
   // caixa
   const boxGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
   const boxMaterial = new THREE.MeshStandardMaterial({
-    // map: crateTexture,
-    // normalMap: crateNormal,
-    // normalScale: new THREE.Vector2(2, 2),
+    map: crateTexture,
+    normalMap: crateNormal,
+    normalScale: new THREE.Vector2(2, 2),
     roughness: 0.8,
   });
   const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
@@ -194,9 +195,9 @@ function setupPrimitives() {
   // barril
   const cylinderGeometry = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 32);
   const cylinderMaterial = new THREE.MeshStandardMaterial({
-    // map: barrelTexture,
-    // normalMap: barrelNormal,
-    // normalScale: new THREE.Vector2(3, 3),
+    map: barrelTexture,
+    normalMap: barrelNormal,
+    normalScale: new THREE.Vector2(3, 3),
     roughness: 0.5,
     metalness: 0.3,
   });
@@ -248,7 +249,7 @@ function loadCarModel() {
       scene.add(carMesh);
 
       // passo 7: inicialização do painel flutuante (descomente para exibir a interface de pintura)
-      // setupConfiguratorGUI();
+      setupConfiguratorGUI();
     },
     undefined,
     function (error) {
