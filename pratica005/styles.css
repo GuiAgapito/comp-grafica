@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #111111;
+}
+
+#loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #111111;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-family: monospace;
+  z-index: 9999;
+}
